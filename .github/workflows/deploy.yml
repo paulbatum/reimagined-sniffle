@@ -1,0 +1,21 @@
+- name: Setup Node 10.x
+  uses: actions/setup-node@v1
+  with:
+    node-version: '10.x'
+- name: 'Run npm'
+  shell: bash
+  run: |
+    # If your function app project is not located in your repository's root
+    # Please change your directory for npm in pushd
+    pushd .
+    npm install
+    npm run build --if-present
+    npm run test --if-present
+    popd
+- name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: fa
+      with:
+        app-name: bfyoc-sniffles-api-prod-westus
+        publish-profile: ${{ secrets.SCM_CREDENTIALS }}
+
