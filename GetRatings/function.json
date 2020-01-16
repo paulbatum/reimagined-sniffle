@@ -16,7 +16,7 @@
       "databaseName": "TissueBox",
       "collectionName": "SnifflesScoops",
       "sqlQuery": "SELECT * from c where c.userId = {userId}",
-      "connectionStringSetting": "CosmosDBConnection"
+      "connectionStringSetting": "snifflescosmosdb_DOCUMENTDB"
     },
     {
       "type": "http",
