@@ -6,7 +6,7 @@
       "direction": "in",
       "name": "req",
       "methods": [
-        "post"
+        "get"
       ]
     },
     {
@@ -16,12 +16,13 @@
     },
     {
       "type": "cosmosDB",
-      "direction": "out",
-      "name": "outputSniffledDoc",
+      "direction": "in",
+      "name": "snifflesInputDoc",
       "databaseName": "TissueBox",
       "collectionName": "SnifflesScoops",
-      "createIfNotExists": "true",
-      "connectionStringSetting": "snifflescosmosdb_DOCUMENTDB"
+      "connectionStringSetting": "snifflescosmosdb_DOCUMENTDB",
+      "id": "{Query.ratingId}",
+      "partitionKey": "{Query.ratingId}"
     }
   ]
 }
