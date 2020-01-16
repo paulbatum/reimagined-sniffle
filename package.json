@@ -5,6 +5,8 @@
   "scripts": {
     "test": "echo \"No tests yet...\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "xmlhttprequest": "^1.8.0"
+  },
   "devDependencies": {}
 }
