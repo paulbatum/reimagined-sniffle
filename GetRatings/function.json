@@ -1,0 +1,27 @@
+{
+  "bindings": [
+    {
+      "authLevel": "anonymous",
+      "type": "httpTrigger",
+      "direction": "in",
+      "name": "req",
+      "methods": [
+        "get"
+      ]
+    },
+    {
+      "name": "ratings",
+      "type": "cosmosDB",
+      "direction": "in",
+      "databaseName": "TissueBox",
+      "collectionName": "SnifflesScoops",
+      "sqlQuery": "SELECT * from c where c.userId = {userId}",
+      "connectionStringSetting": "CosmosDBConnection"
+    },
+    {
+      "type": "http",
+      "direction": "out",
+      "name": "res"
+    }
+  ]
+}
