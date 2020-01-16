@@ -1,4 +1,5 @@
-var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
+var request = require('request-promise');
+
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
     var userIdValue;
@@ -24,31 +25,36 @@ module.exports = async function (context, req) {
         return;
     }
 
-    // Validate ProductID
-    var xmlHttp = new XMLHttpRequest();
+    // Validate
     var productsUrl = `http://serverlessohproduct.trafficmanager.net/api/GetProduct?productId=${productIdValue}`;
-    xmlHttp.open( "GET", productsUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    if( xmlHttp.status != 200)
-    {
-        context.res = {
-            status: 400,
-            body: "Please pass a valid productId on the query string or in the request body"
-        };
-        return;
-    }
-    // Validate User ID
     var userIdsUrl = `http://serverlessohuser.trafficmanager.net/api/GetUser?UserId=${userIdValue}`;
-    xmlHttp.open( "GET", userIdsUrl, false ); // false for synchronous request
-    xmlHttp.send( null );
-    if( xmlHttp.status != 200)
+
+    try
+    {
+        await request.get(productsUrl);
+        await request.get(userIdsUrl);
+    }
+    catch
     {
         context.res = {
             status: 400,
-            body: "Please pass a valid UserId on the query string or in the request body"
+            body: "Please pass a valid productId and userId on the query string or in the request body"
         };
         return;
     }
+
+    // // Validate User ID
+    // 
+    // xmlHttp.open( "GET", userIdsUrl, false ); // false for synchronous request
+    // xmlHttp.send( null );
+    // if( xmlHttp.status != 200)
+    // {
+    //     context.res = {
+    //         status: 400,
+    //         body: "Please pass a valid UserId on the query string or in the request body"
+    //     };
+    //     return;
+    // }
 
     var ratingValue = req.query.rating || (req.body && req.body.rating)
     if (!Number.isInteger(ratingValue) || ratingValue < 0 || ratingValue > 5)
