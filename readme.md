@@ -1,4 +1,4 @@
-# 💧Re-imagined Sniffle 💧
+# 💧Reimagined Sniffle 💧
 
 # 🤧🤧🤧🤧🤧🤧🤧🤧
 
