@@ -17,6 +17,13 @@
       "collectionName": "Sales",
       "createIfNotExists": "true",
       "connectionStringSetting": "snifflescosmosdb_DOCUMENTDB"
+    },
+    {
+      "type": "serviceBus",
+      "direction": "out",
+      "connection": "SalesTopicConnection",
+      "name": "outputSbMsgs",
+      "topicName": "sales"
     }
   ]
 }
