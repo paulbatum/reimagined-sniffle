@@ -4,29 +4,38 @@
       "name": "myBlob",
       "type": "blobTrigger",
       "direction": "in",
-      "path": "testing/{date}-{filetype}.csv",
-      "connection": "AzureWebJobsStorage"
+      "path": "sniffles/{date}-{filetype}.csv",
+      "connection": "OrderStorageConnection"
     },
     {
       "type": "blob",
       "direction": "in",
       "name": "orderLineItems",
-      "path": "testing/{date}-OrderLineItems.csv",
-      "connection": "AzureWebJobsStorage"
+      "path": "sniffles/{date}-OrderLineItems.csv",
+      "connection": "OrderStorageConnection"
     },
     {
       "type": "blob",
       "direction": "in",
       "name": "productInformation",
-      "path": "testing/{date}-ProductInformation.csv",
-      "connection": "AzureWebJobsStorage"
+      "path": "sniffles/{date}-ProductInformation.csv",
+      "connection": "OrderStorageConnection"
     },
     {
       "type": "blob",
       "direction": "in",
       "name": "orderHeaderDetails",
-      "path": "testing/{date}-OrderHeaderDetails.csv",
-      "connection": "AzureWebJobsStorage"
+      "path": "sniffles/{date}-OrderHeaderDetails.csv",
+      "connection": "OrderStorageConnection"
+    },
+    {
+      "type": "cosmosDB",
+      "direction": "out",
+      "name": "orderOutput",
+      "databaseName": "TissueBox",
+      "collectionName": "Orders",
+      "createIfNotExists": "true",
+      "connectionStringSetting": "snifflescosmosdb_DOCUMENTDB"
     }
   ]
 }

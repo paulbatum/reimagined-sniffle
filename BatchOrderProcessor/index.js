@@ -15,15 +15,26 @@ module.exports = async function (context, myBlob) {
             "productInformationCSVUrl": prefix.concat(context.bindingData.date, '-ProductInformation.csv')
         };
 
-        var combined = await request.post('https://serverlessohmanagementapi.trafficmanager.net/api/order/combineOrderContent', {
-            body: body
-        })
-            .
-        context.log(combined);
+        try
+        {
+            var combined = await request.post('https://serverlessohmanagementapi.trafficmanager.net/api/order/combineOrderContent', {
+                body: JSON.stringify(body)
+            })
+
+            combined = JSON.parse(combined);
+        }
+        catch
+        {
+            throw 'pragna needs to fix this';
+        }
+
+        combined.forEach(order => order.id = order.headers.salesNumber);
+        
+        context.bindings.orderOutput = combined;        
     }
     else
     {
-        context.log("We don't have all the files, aborting")
+        context.log("We don't have all the files, skipping...")
         return;
     }
 };
