@@ -3,7 +3,8 @@ module.exports = async function (context, eventHubMessages) {
     context.log(`JavaScript eventhub trigger function called for message array ${eventHubMessages}`);
     var receiptsArray = [];
     var highValueReceiptsArray = [];
-    eventHubMessages.forEach(async (message, index) => {
+    for (var index = 0; index < eventHubMessages.length; index++) {
+        var message = eventHubMessages[index];
         context.log(`Processed message ${message}`);
         var parsedMessage = JSON.parse(message);
         var outReceipt = {
@@ -29,10 +30,9 @@ module.exports = async function (context, eventHubMessages) {
             }
             else {
                 receiptsArray.push(outReceipt);
-
             }
         }
-    });
+    };
     context.bindings.salesOutput = eventHubMessages;
     context.bindings.receiptOutputBlob = receiptsArray;
     context.bindings.highValueReceiptOutputBlob = highValueReceiptsArray;
