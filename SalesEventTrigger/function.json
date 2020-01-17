@@ -17,20 +17,6 @@
       "collectionName": "Sales",
       "createIfNotExists": "true",
       "connectionStringSetting": "snifflescosmosdb_DOCUMENTDB"
-    },
-    {
-      "type": "blob",
-      "direction": "out",
-      "name": "highValueReceiptOutputBlob",
-      "path": "receipts-high-value/{rand-guid}",
-      "connection": "secretstorageconnection"
-    },
-    {
-      "type": "blob",
-      "direction": "out",
-      "name": "receiptOutputBlob",
-      "path": "receipts/{rand-guid}",
-      "connection": "secretstorageconnection"
     }
   ]
 }
