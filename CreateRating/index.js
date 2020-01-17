@@ -89,13 +89,13 @@ let response_handler = function (response) {
     response.on('end', function () {
         let body_ = JSON.parse(body);
         let body__ = JSON.stringify(body_, null, '  ');
-        console.log(body__);
+        context.log(body__);
 
         console.log("debugging docs");
-        console.log(sentimentScore);    
+        context.log(sentimentScore);    
         
         sentimentScore = body_.documents[0].score;
-        console.log.metric("Sentiment", sentimentScore);
+        context.log.metric("Sentiment", sentimentScore);
 
             var outputSniffledDoc = JSON.stringify({
                 userId: userIdValue,
