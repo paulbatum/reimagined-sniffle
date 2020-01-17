@@ -1,15 +1,15 @@
 var request = require('request-promise');
 module.exports = async function (context, eventHubMessages) {
-    context.log(`JavaScript eventhub trigger function called for message array ${eventHubMessages}`);
+    context.log(`JavaScript eventhub trigger function called for message array}`);
     var receiptsArray = [];
     var highValueReceiptsArray = [];
     for (var index = 0; index < eventHubMessages.length; index++) {
         var message = eventHubMessages[index];
         context.log(`Processed message ${message}`);
-        var parsedMessage = JSON.parse(message);
+        var parsedMessage = message.header;
         var outReceipt = {
             "Store": parsedMessage.store,
-            "SalesNumber": parsedMessage.SalesNumber,
+            "SalesNumber": parsedMessage.salesNumber,
             "TotalCost": parsedMessage.totalCost,
             "Items": parsedMessage.totalItems,
             "SalesDate": parsedMessage.salesDate
