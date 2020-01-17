@@ -21,6 +21,8 @@ module.exports = async function (context, eventHubMessages) {
                     var receiptBuffer = new Buffer(receipt);
                     var encodedReceipt = receiptBuffer.toString('base64');
                     outReceipt.ReceiptImage = encodedReceipt;
+                    context.log(`Adding highValue Receipt`);
+    
                     highValueReceiptsArray.push(outReceipt);
                 }
                 catch
@@ -29,6 +31,7 @@ module.exports = async function (context, eventHubMessages) {
                 }
             }
             else {
+                context.log(`Adding Receipt`);
                 receiptsArray.push(outReceipt);
             }
         }
