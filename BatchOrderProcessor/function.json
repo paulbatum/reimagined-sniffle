@@ -1,0 +1,32 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "testing/{date}-{filetype}.csv",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "direction": "in",
+      "name": "orderLineItems",
+      "path": "testing/{date}-OrderLineItems.csv",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "direction": "in",
+      "name": "productInformation",
+      "path": "testing/{date}-ProductInformation.csv",
+      "connection": "AzureWebJobsStorage"
+    },
+    {
+      "type": "blob",
+      "direction": "in",
+      "name": "orderHeaderDetails",
+      "path": "testing/{date}-OrderHeaderDetails.csv",
+      "connection": "AzureWebJobsStorage"
+    }
+  ]
+}
