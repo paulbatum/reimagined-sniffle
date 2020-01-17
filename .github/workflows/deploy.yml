@@ -52,7 +52,7 @@ jobs:
         package: '.'
         # If you want to use publish profile credentials instead of Azure Service Principal
         # Please uncomment the following line
-        publish-profile: ${{ secrets.SCM_CREDENTIALS }}
+        publish-profile: ${{ secrets.SCM_CREDENTIALS_PREMIUM }}
 
     #- name: 'use the published functionapp url in upcoming steps'
     #  run: |
