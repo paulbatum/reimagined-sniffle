@@ -1,8 +1,9 @@
 var request = require('request-promise');
 module.exports = async function (context, eventHubMessages) {
     context.log(`JavaScript eventhub trigger function called for message array ${eventHubMessages}`);
-
-    eventHubMessages.forEach((message, index) => {
+    var receiptsArray = [];
+    var highValueReceiptsArray = [];
+    eventHubMessages.forEach(async (message, index) => {
         context.log(`Processed message ${message}`);
         var parsedMessage = JSON.parse(message);
         var outReceipt = {
@@ -19,18 +20,20 @@ module.exports = async function (context, eventHubMessages) {
                     var receiptBuffer = new Buffer(receipt);
                     var encodedReceipt = receiptBuffer.toString('base64');
                     outReceipt.ReceiptImage = encodedReceipt;
-                    context.bindings.highValueReceiptOutputBlob = outReceipt;
+                    highValueReceiptsArray.push(outReceipt);
                 }
                 catch
                 {
                     context.log(`Did not find reciept at ${parsedMessage.receiptUrl}`);
                 }
             }
-            else
-            {
-                context.bindings.receiptOutputBlob = outReceipt;
+            else {
+                receiptsArray.push(outReceipt);
+
             }
         }
     });
     context.bindings.salesOutput = eventHubMessages;
+    context.bindings.receiptOutputBlob = receiptsArray;
+    context.bindings.highValueReceiptOutputBlob = highValueReceiptsArray;
 };
