@@ -81,6 +81,9 @@ module.exports = async function (context, req) {
 
         const result = await request(options);
         sentimentScore = result.documents[0].score;
+        //context.log.metric("Sentiment", sentimentScore);
+        context.log("Sentiment is "+sentimentScore);
+        context.log(sentimentScore);
 
         var outputSniffledDoc = JSON.stringify({
             userId: userIdValue,
