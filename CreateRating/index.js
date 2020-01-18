@@ -1,4 +1,6 @@
 var request = require('request-promise');
+var https = require('https');
+
 
 module.exports = async function (context, req) {
     context.log('JavaScript HTTP trigger function processed a request.');
@@ -29,8 +31,7 @@ module.exports = async function (context, req) {
     var productsUrl = `http://serverlessohproduct.trafficmanager.net/api/GetProduct?productId=${productIdValue}`;
     var userIdsUrl = `http://serverlessohuser.trafficmanager.net/api/GetUser?UserId=${userIdValue}`;
 
-    try
-    {
+    try {
         await request.get(productsUrl);
         await request.get(userIdsUrl);
     }
@@ -43,107 +44,64 @@ module.exports = async function (context, req) {
         return;
     }
 
-    // // Validate User ID
-    // 
-    // xmlHttp.open( "GET", userIdsUrl, false ); // false for synchronous request
-    // xmlHttp.send( null );
-    // if( xmlHttp.status != 200)
-    // {
-    //     context.res = {
-    //         status: 400,
-    //         body: "Please pass a valid UserId on the query string or in the request body"
-    //     };
-    //     return;
-    // }
-
     var ratingValue = req.query.rating || (req.body && req.body.rating)
-    if (!Number.isInteger(ratingValue) || ratingValue < 0 || ratingValue > 5)
-    {
-            context.res = {
-                status: 400,
-                body: "Please pass a valid rating on the query string or in the request body"
-            };
-            return;
+    if (!Number.isInteger(ratingValue) || ratingValue < 0 || ratingValue > 5) {
+        context.res = {
+            status: 400,
+            body: "Please pass a valid rating on the query string or in the request body"
+        };
+        return;
     }
     var locationNameValue = req.query.locationName || (req.body && req.body.locationName)
     var userNotesValue = req.query.userNotes || (req.body && req.body.userNotes)
 
     //Send userNotes through sentiment Analysis
 
-var sentimentScore; 
+    var sentimentScore;
 
-    'use strict';
+    subscription_key = process.env.sentiment_subscription_key;
+    endpoint = "https://westus.api.cognitive.microsoft.com/";
 
-let https = require ('https');
-
-subscription_key = "bca96e65e74b4ddd846523adb2c2db6f";
-endpoint = "https://westus.api.cognitive.microsoft.com/";
-
-let path = '/text/analytics/v2.1/sentiment';
-
-let response_handler = function (response) {
-    let body = '';
-    response.on('data', function (d) {
-        body += d;
-    });
-    response.on('end', function () {
-        let body_ = JSON.parse(body);
-        let body__ = JSON.stringify(body_, null, '  ');
-        context.log(body__);
-
-        console.log("debugging docs");
-        context.log(sentimentScore);    
-        
-        sentimentScore = body_.documents[0].score;
-        context.log.metric("Sentiment", sentimentScore);
-
-            var outputSniffledDoc = JSON.stringify({
-                userId: userIdValue,
-                productId: productIdValue,
-                timestamp: Date.now(),
-                rating: ratingValue,
-                locationName: locationNameValue,
-                userNotes: userNotesValue,
-                sentimentScore: sentimentScore
-              });
-            context.bindings.outputSniffledDoc = outputSniffledDoc;
-        
-            context.res = {
-                status: 200,
-                body: outputSniffledDoc
-            };
-    
-    
-    
-    });
-    response.on('error', function (e) {
-        console.log('Error: ' + e.message);
-    });
-};
-
-let get_sentiments = function (documents) {
-    let body = JSON.stringify(documents);
-
-    let request_params = {
-        method: 'POST',
-        hostname: (new URL(endpoint)).hostname,
-        path: path,
-        headers: {
-            'Ocp-Apim-Subscription-Key': subscription_key,
-        }
+    let documents = {
+        'documents': [
+            { 'id': '1', 'language': 'en', 'text': userNotesValue }
+        ]
     };
 
-    let req = https.request(request_params, response_handler);
-    req.write(body);
-    req.end();
-}
+    var options = {
+        method: 'POST',
+        uri: 'https://westus.api.cognitive.microsoft.com/text/analytics/v2.1/sentiment',
+        body:documents,
+        headers: {
+            'Ocp-Apim-Subscription-Key': subscription_key,
+        },
+        json: true // Automatically stringifies the body to JSON
+    };
+    try {
 
-let documents = {
-    'documents': [
-        { 'id': '1', 'language': 'en', 'text': userNotesValue}
-    ]
-};
+        const result = await request(options);
+        sentimentScore = result.documents[0].score;
 
-get_sentiments(documents);
+        var outputSniffledDoc = JSON.stringify({
+            userId: userIdValue,
+            productId: productIdValue,
+            timestamp: Date.now(),
+            rating: ratingValue,
+            locationName: locationNameValue,
+            userNotes: userNotesValue,
+            sentimentScore: sentimentScore
+        });
+        context.bindings.outputSniffledDoc = outputSniffledDoc;
 
+        context.res = {
+            status: 200,
+            body: outputSniffledDoc
+        };
+    } catch(error)
+    {
+        context.res = {
+            status: 400,
+            body: "Sentiment failed"
+        };
+    }
 };
